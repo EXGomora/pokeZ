@@ -206,6 +206,8 @@ DEF battlecheck           EQUS "randomwildmon"
 DEF loadtrainerdata       EQUS "loadtemptrainer"
 DEF loadpokedata          EQUS "loadwildmon"
 DEF returnafterbattle     EQUS "reloadmapafterbattle"
+DEF refreshscreen         EQUS "reanchormap"
+DEF reloadmappart         EQUS "refreshmap"
 DEF trainerstatus         EQUS "trainerflagaction"
 DEF talkaftercancel       EQUS "endifjustbattled"
 DEF talkaftercheck        EQUS "checkjustbattled"
@@ -399,6 +401,10 @@ DEF receivetogepiegg      EQUS "ReceiveTogepiEggScript"
 DEF pcscript              EQUS "PCScript"
 DEF gamecornercoinvendor  EQUS "GameCornerCoinVendorScript"
 DEF happinesschecknpc     EQUS "HappinessCheckScript"
+
+; constants/charmap.asm
+charmap "%", "<BSP>"
+charmap "¯", "<WBR>"
 
 ; constants/sprite_constants.asm
 DEF SPRITE_BUENA EQUS "SPRITE_BEAUTY"

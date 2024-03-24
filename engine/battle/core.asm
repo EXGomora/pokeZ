@@ -147,6 +147,7 @@ WildFled_EnemyFled_LinkBattleCanceled:
 	call CheckMobileBattleError
 	jr c, .skip_sfx
 
+; BUG: SFX_RUN does not play correctly when a wild Pokémon flees from battle (see docs/bugs_and_glitches.md)
 	ld de, SFX_RUN
 	call PlaySFX
 
@@ -2744,7 +2745,7 @@ ForcePlayerMonChoice:
 	call LoadTilemapToTempTilemap
 	call WaitBGMap
 	call GetMemSGBLayout
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 	xor a
 	ld c, a
 	ret
@@ -2763,7 +2764,7 @@ ForcePlayerMonChoice:
 	call _LoadHPBar
 	call CloseWindow
 	call GetMemSGBLayout
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 	call SendOutMonText
 	call NewBattleMonStatus
 	call BreakAttraction
@@ -2827,9 +2828,9 @@ SetUpBattlePartyMenu_Loop: ; switch to fullscreen menu?
 
 JumpToPartyMenuAndPrintText:
 	farcall WritePartyMenuTilemap
-	farcall PrintPartyMenuText
+	farcall PlacePartyMenuText
 	call WaitBGMap
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 	call DelayFrame
 	ret
 
@@ -2960,7 +2961,7 @@ LostBattle:
 ; Grayscale
 	ld b, SCGB_BATTLE_GRAYSCALE
 	call GetSGBLayout
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 	jr .end
 
 .LostLinkBattle:
@@ -5044,7 +5045,7 @@ BattleMenu_Pack:
 	and BATTLERESULT_BITMASK
 	ld [wBattleResult], a ; WIN
 	call ClearWindowData
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 	scf
 	ret
 
@@ -5094,7 +5095,7 @@ BattleMenuPKMN_Loop:
 	call CloseWindow
 	call LoadTilemapToTempTilemap
 	call GetMemSGBLayout
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 	jp BattleMenu
 
 .GetMenu:
@@ -5180,7 +5181,7 @@ TryPlayerSwitch:
 	call _LoadHPBar
 	call CloseWindow
 	call GetMemSGBLayout
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 	ld a, [wCurPartyMon]
 	ld [wCurBattleMon], a
 PlayerSwitch:
@@ -6404,7 +6405,7 @@ LoadEnemyMon:
 
 	ld hl, wEnemyMonStats
 	ld de, wEnemyStats
-	ld bc, NUM_EXP_STATS * 2
+	ld bc, NUM_BATTLE_STATS * 2
 	call CopyBytes
 
 ; BUG: PRZ and BRN stat reductions don't apply to switched Pokémon (see docs/bugs_and_glitches.md)
@@ -6962,7 +6963,7 @@ FinishBattleAnim:
 	push hl
 	ld b, SCGB_BATTLE_COLORS
 	call GetSGBLayout
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 	call DelayFrame
 	pop hl
 	pop de
@@ -8529,7 +8530,7 @@ _DisplayLinkRecord:
 	call WaitBGMap2
 	ld b, SCGB_DIPLOMA
 	call GetSGBLayout
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 	ld c, 8
 	call DelayFrames
 	call WaitPressAorB_BlinkCursor
@@ -9010,7 +9011,7 @@ InitBattleDisplay:
 	call HideSprites
 	ld b, SCGB_BATTLE_COLORS
 	call GetSGBLayout
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 	ld a, $90
 	ldh [hWY], a
 	xor a
@@ -9146,7 +9147,7 @@ BattleStartMessage:
 	farcall Battle_GetTrainerName
 
 	ld hl, WantsToBattleText
-	jr .PlaceBattleStartText
+	jr .PrintBattleStartText
 
 .wild
 	call BattleCheckEnemyShininess
@@ -9188,18 +9189,18 @@ BattleStartMessage:
 	farcall StubbedTrainerRankings_HookedEncounters
 
 	ld hl, HookedPokemonAttackedText
-	jr .PlaceBattleStartText
+	jr .PrintBattleStartText
 
 .NotFishing:
 	ld hl, PokemonFellFromTreeText
 	cp BATTLETYPE_TREE
-	jr z, .PlaceBattleStartText
+	jr z, .PrintBattleStartText
 	ld hl, WildCelebiAppearedText
 	cp BATTLETYPE_CELEBI
-	jr z, .PlaceBattleStartText
+	jr z, .PrintBattleStartText
 	ld hl, WildPokemonAppearedText
 
-.PlaceBattleStartText:
+.PrintBattleStartText:
 	push hl
 	farcall BattleStart_TrainerHuds
 	pop hl

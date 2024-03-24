@@ -924,3 +924,5 @@ SunglowCave1F_Blocks:
 
 WhisperingMarshSouth_Blocks:
 	INCBIN "maps/WhisperingMarshSouth.ablk"
+
+ENDSECTION

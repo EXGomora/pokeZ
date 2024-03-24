@@ -1,5 +1,5 @@
-TIMESET_UP_ARROW   EQU "♂" ; $ef
-TIMESET_DOWN_ARROW EQU "♀" ; $f5
+DEF TIMESET_UP_ARROW   EQU "♂" ; $ef
+DEF TIMESET_DOWN_ARROW EQU "♀" ; $f5
 
 InitClock:
 ; Ask the player to set the time.
@@ -8,7 +8,7 @@ InitClock:
 	ld a, $1
 	ldh [hInMenu], a
 
-	ld a, $0
+	ld a, FALSE
 	ld [wSpriteUpdatesEnabled], a
 	ld a, $10
 ;	ld [wMusicFade], a
@@ -593,7 +593,7 @@ InitialSetDSTFlag:
 	lb bc, 3, 18
 	call ClearBox
 	ld hl, .Text
-	call PlaceHLTextAtBC
+	call PrintTextboxTextAt
 	ret
 
 .Text:
@@ -620,7 +620,7 @@ InitialClearDSTFlag:
 	lb bc, 3, 18
 	call ClearBox
 	ld hl, .Text
-	call PlaceHLTextAtBC
+	call PrintTextboxTextAt
 	ret
 
 .Text:
@@ -644,7 +644,7 @@ MrChrono: ; unreferenced
 	lb bc, 3, SCREEN_WIDTH - 2
 	call ClearBox
 	ld hl, .Text
-	call PlaceHLTextAtBC
+	call PrintTextboxTextAt
 	ret
 
 .Text:

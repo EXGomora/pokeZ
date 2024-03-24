@@ -6,7 +6,7 @@ SweetScentFromMenu:
 	ret
 
 .SweetScent:
-	reloadmappart
+	refreshmap
 	special UpdateTimePals
 	writetext UseSweetScentText
 	waitbutton
@@ -29,7 +29,7 @@ SweetScentNothing:
 	end
 
 SweetScentEncounter:
-	farcall CanUseSweetScent
+	farcall CanEncounterWildMon
 	jr nc, .no_battle
 	ld hl, wStatusFlags2
 	bit STATUSFLAGS2_BUG_CONTEST_TIMER_F, [hl]

@@ -25,7 +25,7 @@ InitGender:
 ;	call LoadGenderScreenPal [this line and the next one should be kept commented if this doesn't work]
 ;	call LoadGenderScreenLightBlueTile
 	call WaitBGMap2
-	call SetPalettes
+	call SetDefaultBGPAndOBP
 ;	ld hl, AreYouABoyOrAreYouAGirlText
 	ld hl, ZGenderSelectText
 	call PrintText

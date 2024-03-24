@@ -190,3 +190,5 @@ hFunctionTargetLo:: db
 hFunctionTargetHi:: db
 
 	ds 12
+
+ENDSECTION

@@ -742,7 +742,7 @@ CGBCopyBattleObjectPals: ; unreferenced
 	dec c
 	jr nz, .loop
 	ld hl, BattleObjectPals
-	ld de, wOBPals1 palette 2
+	ld de, wOBPals1 palette PAL_BATTLE_OB_GRAY
 	ld bc, 2 palettes
 	ld a, BANK(wOBPals1)
 	call FarCopyWRAM
@@ -992,8 +992,8 @@ PushSGBBorder:
 	ret
 
 SGB_ClearVRAM:
-	ld hl, VRAM_Begin
-	ld bc, VRAM_End - VRAM_Begin
+	ld hl, STARTOF(VRAM)
+	ld bc, SIZEOF(VRAM)
 	xor a
 	call ByteFill
 	ret
@@ -1213,7 +1213,7 @@ LoadMapPals:
 
 	; Which palette group is based on whether we're outside or inside
 	ld a, [wEnvironment]
-	and 7
+	maskbits NUM_ENVIRONMENTS + 1
 	ld e, a
 	ld d, 0
 	ld hl, EnvironmentColorsPointers

@@ -394,3 +394,5 @@ s7_a001:: db
 	ds $7fe
 
 sMobileAdapterStatus2:: db
+
+ENDSECTION

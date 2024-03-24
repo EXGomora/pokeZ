@@ -483,3 +483,5 @@ INCLUDE "maps/SunglowBeach.asm"
 INCLUDE "maps/SunglowCove.asm"
 INCLUDE "maps/SunglowCave1F.asm"
 INCLUDE "maps/WhisperingMarshSouth.asm"
+
+ENDSECTION
