@@ -998,6 +998,8 @@ _GetCursorMon:
 	; is unpredictable, but bpp copy can be relied upon).
 	ld hl, wBufferMonDVs
 	predef GetUnownLetter
+	ld hl, wBufferMonDVs
+	predef GetUnownLetter
 	ld a, [wBufferMonAltSpecies]
 	ld [wCurPartySpecies], a
 	ld [wCurSpecies], a
