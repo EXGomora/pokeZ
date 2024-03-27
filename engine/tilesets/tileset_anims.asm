@@ -78,17 +78,27 @@ TilesetForestAnim:
 	dw NULL,  DoneTileAnimation
 
 TilesetJohtoAnim:
-TilesetNeostOutdoors1Anim:
-TilesetNeostForest1Anim:
+	dw vTiles2 tile $14, AnimateWaterTile
 	dw NULL,  WaitTileAnimation
 	dw NULL,  WaitTileAnimation
-	dw NULL,  WaitTileAnimation ; previously AnimateWaterPalette
+	dw NULL,  AnimateWaterPalette
 	dw NULL,  WaitTileAnimation
 	dw NULL,  AnimateFlowerTile
 	dw WhirlpoolFrames1, AnimateWhirlpoolTile
 	dw WhirlpoolFrames2, AnimateWhirlpoolTile
 	dw WhirlpoolFrames3, AnimateWhirlpoolTile
 	dw WhirlpoolFrames4, AnimateWhirlpoolTile
+	dw NULL,  WaitTileAnimation
+	dw NULL,  StandingTileFrame8
+	dw NULL,  DoneTileAnimation
+
+TilesetNeostOutdoors1Anim:
+TilesetNeostForest1Anim:
+	dw NULL,  AnimateNeostFlowerTile
+	dw WhirlpoolFramesNeost1, AnimateWhirlpoolTile
+	dw WhirlpoolFramesNeost2, AnimateWhirlpoolTile
+	dw WhirlpoolFramesNeost3, AnimateWhirlpoolTile
+	dw WhirlpoolFramesNeost4, AnimateWhirlpoolTile
 	dw PondFrames, AnimatePondTile
 	dw WaterRockFrames, AnimateWaterRockTile
 	dw DockFrames, AnimateDockTile
@@ -705,12 +715,46 @@ AnimateFlowerTile:
 	ld hl, .FlowerTileFrames
 	add hl, de
 
+; Write the tile graphic from hl (now sp) to tile $03 (now hl)
+	ld sp, hl
+	ld hl, vTiles2 tile $03
+	jp WriteTile
+
+.FlowerTileFrames:
+	INCBIN "gfx/tilesets/flower/dmg_1.2bpp"
+	INCBIN "gfx/tilesets/flower/cgb_1.2bpp"
+	INCBIN "gfx/tilesets/flower/dmg_2.2bpp"
+	INCBIN "gfx/tilesets/flower/cgb_2.2bpp"
+
+AnimateNeostFlowerTile:
+; Save the stack pointer in bc for WriteTile to restore
+	ld hl, sp+0
+	ld b, h
+	ld c, l
+
+; A cycle of 2 frames, updating every other tick
+	ld a, [wTileAnimationTimer]
+	and %10
+
+; CGB has different tile graphics for flowers
+	ld e, a
+	ldh a, [hCGB]
+	and 1
+	add e
+
+; hl = .FlowerTileFrames + a * 16
+	swap a
+	ld e, a
+	ld d, 0
+	ld hl, .NeostFlowerTileFrames
+	add hl, de
+
 ; Write the tile graphic from hl (now sp) to tile $06 (now hl)
 	ld sp, hl
 	ld hl, vTiles2 tile $06
 	jp WriteTile
 
-.FlowerTileFrames:
+.NeostFlowerTileFrames:
 	INCBIN "gfx/tilesets/flower/dmg_1.2bpp"
 	INCBIN "gfx/tilesets/flower/cgb_1.2bpp"
 	INCBIN "gfx/tilesets/flower/dmg_2.2bpp"
@@ -1102,10 +1146,15 @@ TowerPillarTile8:  INCBIN "gfx/tilesets/tower-pillar/8.2bpp"
 TowerPillarTile9:  INCBIN "gfx/tilesets/tower-pillar/9.2bpp"
 TowerPillarTile10: INCBIN "gfx/tilesets/tower-pillar/10.2bpp"
 
-WhirlpoolFrames1: dw vTiles2 tile $2E, WhirlpoolTiles1
-WhirlpoolFrames2: dw vTiles2 tile $2F, WhirlpoolTiles2
-WhirlpoolFrames3: dw vTiles2 tile $3E, WhirlpoolTiles3
-WhirlpoolFrames4: dw vTiles2 tile $3F, WhirlpoolTiles4
+WhirlpoolFrames1: dw vTiles2 tile $32, WhirlpoolTiles1
+WhirlpoolFrames2: dw vTiles2 tile $33, WhirlpoolTiles2
+WhirlpoolFrames3: dw vTiles2 tile $42, WhirlpoolTiles3
+WhirlpoolFrames4: dw vTiles2 tile $43, WhirlpoolTiles4
+
+WhirlpoolFramesNeost1: dw vTiles2 tile $2E, WhirlpoolTiles1
+WhirlpoolFramesNeost2: dw vTiles2 tile $2F, WhirlpoolTiles2
+WhirlpoolFramesNeost3: dw vTiles2 tile $3E, WhirlpoolTiles3
+WhirlpoolFramesNeost4: dw vTiles2 tile $3F, WhirlpoolTiles4
 
 WhirlpoolTiles1: INCBIN "gfx/tilesets/whirlpool/1.2bpp"
 WhirlpoolTiles2: INCBIN "gfx/tilesets/whirlpool/2.2bpp"
