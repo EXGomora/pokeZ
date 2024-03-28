@@ -16,13 +16,19 @@ SaltbreezePokemonCenterMoveReminder: ; [E-2]
 	special MoveReminder
 	waitbutton
 	closetext
-	end
+	end 
 
 SaltbreezePokemonCenterMoveDeleter:
 	faceplayer
 	opentext
 	special MoveDeletion
 	waitbutton
+	closetext
+	end
+
+SaltbreezeHMShelf:
+	opentext
+	pokemart MARTTYPE_SHELF, MART_SALTBREEZE_HM
 	closetext
 	end
 
@@ -36,6 +42,8 @@ SaltbreezePokemonCenter_MapEvents:
 	def_coord_events
 
 	def_bg_events
+	bg_event  16,  4, BGEVENT_UP, SaltbreezeHMShelf
+	bg_event  17,  4, BGEVENT_UP, SaltbreezeHMShelf
 
 	def_object_events
 	object_event  11, 1, SPRITE_NURSE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, SaltbreezePokemonCenterNurseScript, -1 ; [E-1]

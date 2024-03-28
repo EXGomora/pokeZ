@@ -35,6 +35,7 @@ Marts:
 	dw MartMtMoon
 	dw MartIndigoPlateau
 	dw MartUnderground
+	dw MartSaltbreezeHM
 	assert_table_length NUM_MARTS
 
 MartCherrygrove:
@@ -398,6 +399,18 @@ MartUnderground:
 	db ENERGY_ROOT
 	db HEAL_POWDER
 	db REVIVAL_HERB
+	db -1 ; end
+
+MartSaltbreezeHM:
+	db 8 ; # items
+	db HATCHET
+	db PICKAXE
+	db CLIMBINGGEAR
+	db SEA_FLUTE
+	db GRAPPLE_HOOK
+	db EARTH_FLUTE
+	db SKY_FLUTE
+	db FLASHLIGHT
 	db -1 ; end
 
 DefaultMart:

@@ -22,6 +22,7 @@ OpenMartDialog::
 	dw BargainShop
 	dw Pharmacist
 	dw RooftopSale
+	dw MartShelf
 
 MartDialog:
 	ld a, MARTTYPE_STANDARD
@@ -70,6 +71,16 @@ Pharmacist:
 	call BuyMenu
 	ld hl, PharmacyComeAgainText
 	call MartTextbox
+	ret
+
+MartShelf:
+	call FarReadMart
+	call LoadStandardMenuHeader
+	ld hl, Text_Shelf_Intro
+	call MartTextbox
+	call BuyMenu
+	ld hl, Text_Shelf_ComeAgain
+	jp MartTextbox
 	ret
 
 RooftopSale:
@@ -394,6 +405,7 @@ GetMartDialogGroup:
 	dwb .BargainShopPointers, 1
 	dwb .PharmacyPointers, 0
 	dwb .StandardMartPointers, 2
+	dwb .ShelfPointers, 0
 
 .StandardMartPointers:
 	dw MartHowManyText
@@ -425,6 +437,14 @@ GetMartDialogGroup:
 	dw PharmacyNoMoneyText
 	dw PharmacyPackFullText
 	dw PharmacyThanksText
+	dw BuyMenuLoop
+
+.ShelfPointers:
+	dw Text_Shelf_HowMany
+	dw Text_Shelf_CostsThisMuch
+	dw Text_Shelf_InsufficientFunds
+	dw Text_Shelf_BagFull
+	dw Text_Shelf_HereYouGo
 	dw BuyMenuLoop
 
 BuyMenuLoop:
@@ -864,3 +884,31 @@ MartTextbox:
 	call JoyWaitAorB
 	call ExitMenu
 	ret
+
+Text_Shelf_Intro:
+	text_far Shelf_IntroText
+	text_end
+
+Text_Shelf_ComeAgain:
+	text_far Shelf_ComeAgainText
+	text_end
+
+Text_Shelf_HowMany:
+	text_far Shelf_HowManyText
+	text_end
+
+Text_Shelf_CostsThisMuch:
+	text_far Shelf_CostsThisMuchText
+	text_end
+
+Text_Shelf_InsufficientFunds:
+	text_far Shelf_InsufficientFundsText
+	text_end
+
+Text_Shelf_BagFull:
+	text_far Shelf_BagFullText
+	text_end
+
+Text_Shelf_HereYouGo:
+	text_far Shelf_HereYouGoText
+	text_end

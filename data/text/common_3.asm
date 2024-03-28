@@ -658,6 +658,40 @@ _MartBoughtText::
 	text "(S)."
 	done
 
+Shelf_IntroText::
+	text "It's a shelf full"
+	line "of useful items!"
+	done
+
+Shelf_ComeAgainText::
+	text "You stopped"
+	line "shopping."
+	done
+
+Shelf_HowManyText::
+	text "How many will you"
+	line "buy?"
+	done
+
+Shelf_CostsThisMuchText::
+	text "Pay ¥@"
+	text_decimal hMoneyTemp, 3, 6
+	text "?"
+	done
+
+Shelf_InsufficientFundsText::
+	text "You don't have"
+	line "enough money..."
+	done
+
+Shelf_BagFullText::
+	text "Your bag is full."
+	done
+
+Shelf_HereYouGoText::
+	text "Cha-ching!"
+	done
+
 _SlotsBetHowManyCoinsText::
 	text "Bet how many"
 	line "coins?"
