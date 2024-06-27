@@ -13,11 +13,11 @@ VBlank::
 	push hl
 
 	ldh a, [hVBlank]
-	and 7
+	maskbits NUM_VBLANK_HANDLERS
 
 	ld e, a
 	ld d, 0
-	ld hl, .VBlanks
+	ld hl, VBlankHandlers
 	add hl, de
 	add hl, de
 	ld a, [hli]
@@ -34,17 +34,20 @@ VBlank::
 	pop af
 	reti
 
-.VBlanks:
-	dw VBlank0
-	dw VBlank1
-	dw VBlank2
-	dw VBlank3
-	dw VBlank4
-	dw VBlank5
-	dw VBlank6
-	dw VBlank7
+VBlankHandlers:
+; entries correspond to VBLANK_* constants (see constants/ram_constants.asm)
+	table_width 2, VBlankHandlers
+	dw VBlank_Normal
+	dw VBlank_Cutscene
+	dw VBlank_SoundOnly
+	dw VBlank_CutsceneCGB
+	dw VBlank_Serial
+	dw VBlank_Credits
+	dw VBlank_DMATransfer
+	dw VBlank_Newbox
+	assert_table_length NUM_VBLANK_HANDLERS
 
-VBlank0::
+VBlank_Normal::
 ; normal operation
 
 ; rng
@@ -137,7 +140,7 @@ VBlank0::
 
 	ret
 
-VBlank2::
+VBlank_SoundOnly::
 ; sound only
 
 	ldh a, [hROMBank]
@@ -154,7 +157,7 @@ VBlank2::
 	ld [wVBlankOccurred], a
 	ret
 
-VBlank1::
+VBlank_Cutscene::
 ; scx, scy
 ; palettes
 ; bg map
@@ -238,7 +241,7 @@ UpdatePals::
 	and a
 	ret
 
-VBlank3::
+VBlank_CutsceneCGB::
 ; scx, scy
 ; palettes
 ; bg map
@@ -302,7 +305,7 @@ VBlank3::
 	ldh [rIF], a
 	ret
 
-VBlank4::
+VBlank_Serial::
 ; bg map
 ; tiles
 ; oam
@@ -333,7 +336,7 @@ VBlank4::
 	rst Bankswitch
 	ret
 
-VBlank5::
+VBlank_Credits::
 ; scx
 ; palettes
 ; bg map
@@ -381,7 +384,7 @@ VBlank5::
 	ldh [rIE], a
 	ret
 
-VBlank6::
+VBlank_DMATransfer::
 ; palettes
 ; tiles
 ; dma transfer
@@ -413,7 +416,7 @@ VBlank6::
 	rst Bankswitch
 	ret
 
-VBlank7:
+VBlank_Newbox::
 	; special vblank routine
 	; copies tilemap in one frame without any tearing
 	; also updates oam, and pals if specified
