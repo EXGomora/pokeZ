@@ -2322,6 +2322,8 @@ SwimsuitEffect:
 	ret
 
 PickaxeEffect:
+	ld a, 1
+	ld [wUsingHMItem], a
 	farcall RockSmashFunction
 	ret
 

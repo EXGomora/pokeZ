@@ -959,9 +959,8 @@ Script_StrengthFromMenu:
 Script_UsedStrength:
 	callasm SetStrengthFlag
 	writetext .UseStrengthText
-	readmem wStrengthSpecies
-	cry 0 ; plays [wStrengthSpecies] cry
-	pause 3
+	playsound SFX_POKEFLUTE
+	pause 220
 	writetext .MoveBoulderText
 	closetext
 	end
@@ -988,9 +987,7 @@ AskStrengthScript:
 
 .AskStrength:
 	opentext
-	writetext AskStrengthText
-	yesorno
-	iftrue Script_UsedStrength
+	sjump Script_UsedStrength
 	closetext
 	end
 
@@ -1330,9 +1327,7 @@ AskRockSmashScript:
 	ifequal 1, .no
 
 	opentext
-	writetext AskRockSmashText
-	yesorno
-	iftrue RockSmashScript
+	sjump RockSmashScript
 	closetext
 	end
 .no
