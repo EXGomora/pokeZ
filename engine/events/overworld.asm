@@ -47,20 +47,6 @@ CheckEngineFlag:
 	xor a
 	ret
 
-CheckBadge:
-; Check engine flag a (ENGINE_ZEPHYRBADGE thru ENGINE_EARTHBADGE)
-; Display "Badge required" text and return carry if the badge is not owned
-	call CheckEngineFlag
-	ret nc
-	ld hl, .BadgeRequiredText
-	call MenuTextboxBackup ; push text to queue
-	scf
-	ret
-
-.BadgeRequiredText:
-	text_far _BadgeRequiredText
-	text_end
-
 CheckPartyMove:
 ; Check if a monster in your party has move d.
 
@@ -105,15 +91,6 @@ CheckPartyMove:
 	scf
 	ret
 
-FieldMoveFailed:
-	ld hl, .CantUseItemText
-	call MenuTextboxBackup
-	ret
-
-.CantUseItemText:
-	text_far _CantUseItemText
-	text_end
-
 CutFunction:
 	call FieldMoveJumptableReset
 .loop
@@ -146,18 +123,8 @@ CutFunction:
 	ret
 
 .FailCut:
-	ld hl, CutNothingText
-	call MenuTextboxBackup
 	ld a, $80
 	ret
-
-UseCutText:
-	text_far _UseCutText
-	text_end
-
-CutNothingText:
-	text_far _CutNothingText
-	text_end
 
 CheckMapForSomethingToCut:
 	; Does the collision data of the facing tile permit cutting?
@@ -260,6 +227,54 @@ CheckOverworldTileArrays:
 	xor a
 	ret
 
+TryCutOW::
+	ld a, HATCHET
+	ld [wCurItem], a
+	ld hl, wNumItems
+	call CheckItem
+	jr nc, .cant_cut
+
+	ld a, BANK(AskCutScript)
+	ld hl, AskCutScript
+	call CallScript
+	scf
+	ret
+
+.cant_cut
+	ld a, BANK(CantCutScript)
+	ld hl, CantCutScript
+	call CallScript
+	scf
+	ret
+
+AskCutScript:
+	opentext
+	writetext UseCutText
+	waitbutton
+	closetext
+	callasm .CheckMap
+	iftrue Script_Cut
+
+.CheckMap:
+	xor a
+	ld [wScriptVar], a
+	call CheckMapForSomethingToCut
+	ret c
+	ld a, TRUE
+	ld [wScriptVar], a
+	ret
+
+UseCutText:
+	text_far _UseCutText
+	text_end
+
+CantCutScript:
+	jumptext CanCutText
+
+CanCutText:
+	text_far _CanCutText
+	text_end
+
 INCLUDE "data/collision/field_move_blocks.asm"
 
 FlashFunction:
@@ -282,7 +297,6 @@ FlashFunction:
 	ret
 
 .notadarkcave
-	call FieldMoveFailed
 	ld a, $80
 	ret
 
@@ -291,25 +305,13 @@ UseFlash:
 	jp QueueScript
 
 Script_UseFlash:
+	closetext
 	refreshmap
 	special UpdateTimePals
-	writetext UseFlashTextScript
+	special WaitSFX
+	playsound SFX_FLASH
 	callasm BlindingFlash
-	closetext
 	end
-
-UseFlashTextScript:
-	text_far _BlindingFlashText
-	text_asm
-	call WaitSFX
-	ld de, SFX_FLASH
-	call PlaySFX
-	call WaitSFX
-	ld hl, .BlankText
-	ret
-
-.BlankText:
-	text_end
 
 SurfFunction:
 	call FieldMoveJumptableReset
@@ -363,25 +365,18 @@ SurfFunction:
 	ret
 
 .FailSurf:
-	ld hl, CantSurfText
-	call MenuTextboxBackup
 	ld a, $80
 	ret
 
 .AlreadySurfing:
-	ld hl, AlreadySurfingText
-	call MenuTextboxBackup
 	ld a, $80
 	ret
 
 SurfFromMenuScript:
+	closetext
 	special UpdateTimePals
 
 UsedSurfScript:
-	writetext UsedSurfText ; "used SURF!"
-	waitbutton
-	closetext
-
 	callasm .stubbed_fn
 
 	readmem wSurfingPlayerState
@@ -395,18 +390,6 @@ UsedSurfScript:
 .stubbed_fn
 	farcall StubbedTrainerRankings_Surf
 	ret
-
-UsedSurfText:
-	text_far _UsedSurfText
-	text_end
-
-CantSurfText:
-	text_far _CantSurfText
-	text_end
-
-AlreadySurfingText:
-	text_far _AlreadySurfingText
-	text_end
 
 GetSurfType:
 ; Surfing on Pikachu uses an alternate sprite.
@@ -491,8 +474,8 @@ TrySurfOW::
 	ld [wSurfingPlayerState], a
 	call GetPartyNickname
 
-	ld a, BANK(AskSurfScript)
-	ld hl, AskSurfScript
+	ld a, BANK(UsedSurfScript)
+	ld hl, UsedSurfScript
 	call CallScript
 
 	scf
@@ -501,12 +484,6 @@ TrySurfOW::
 .quit
 	xor a
 	ret
-
-AskSurfScript:
-	opentext
-	sjump UsedSurfScript
-	closetext
-	end
 
 FlyFunction:
 	call FieldMoveJumptableReset
@@ -566,14 +543,16 @@ FlyFunction:
 	ret
 
 .FailFly:
-	call FieldMoveFailed
 	ld a, $80 ; makes it so that Fly can't be used indoors
 	ret
 
 .FlyScript:
-	refreshmap
-	callasm HideSprites
 	special UpdateTimePals
+	callasm HideSprites
+	waitsfx
+	playsound SFX_POKEFLUTE
+	showemote EMOTE_SHOCK, PLAYER, 220
+	refreshmap
 	callasm FlyFromAnim
 	farscall Script_AbortBugContest
 	special WarpToSpawnPoint
@@ -609,7 +588,6 @@ WaterfallFunction:
 	ret
 
 .failed
-	call FieldMoveFailed
 	ld a, $80
 	ret
 
@@ -629,15 +607,13 @@ CheckMapCanWaterfall:
 	ret
 
 Script_WaterfallFromMenu:
+	closetext
 	refreshmap
 	special UpdateTimePals
 
 Script_UsedWaterfall:
-	callasm GetPartyNickname
-	writetext .UseWaterfallText
-	waitbutton
-	closetext
-	playsound SFX_BUBBLEBEAM
+	waitsfx
+	playsound SFX_HYDRO_PUMP
 .loop
 	applymovement PLAYER, .WaterfallStep
 	callasm .CheckContinueWaterfall
@@ -656,12 +632,8 @@ Script_UsedWaterfall:
 	ret
 
 .WaterfallStep:
-	turn_waterfall UP
+	slow_step UP
 	step_end
-
-.UseWaterfallText:
-	text_far _UseWaterfallText
-	text_end
 
 TryWaterfallOW::
 	ld a, GRAPPLE_HOOK
@@ -671,8 +643,8 @@ TryWaterfallOW::
 	jr nc, .failed
 	call CheckMapCanWaterfall
 	jr c, .failed
-	ld a, BANK(Script_AskWaterfall)
-	ld hl, Script_AskWaterfall
+	ld a, BANK(Script_UsedWaterfall)
+	ld hl, Script_UsedWaterfall
 	call CallScript
 	scf
 	ret
@@ -689,18 +661,6 @@ Script_CantDoWaterfall:
 
 .HugeWaterfallText:
 	text_far _HugeWaterfallText
-	text_end
-
-Script_AskWaterfall:
-	opentext
-	writetext .AskWaterfallText
-	yesorno
-	iftrue Script_UsedWaterfall
-	closetext
-	end
-
-.AskWaterfallText:
-	text_far _AskWaterfallText
 	text_end
 
 EscapeRopeFunction:
@@ -798,9 +758,9 @@ EscapeRopeOrDig:
 	text_end
 
 .UsedEscapeRopeScript:
+	closetext
 	refreshmap
 	special UpdateTimePals
-	writetext .UseEscapeRopeText
 	sjump .UsedDigOrEscapeRopeScript
 
 .UsedDigScript:
@@ -809,8 +769,6 @@ EscapeRopeOrDig:
 	writetext .UseDigText
 
 .UsedDigOrEscapeRopeScript:
-	waitbutton
-	closetext
 	playsound SFX_WARP_TO
 	applymovement PLAYER, .DigOut
 	farscall Script_AbortBugContest
@@ -869,33 +827,19 @@ TeleportFunction:
 	ret
 
 .DoTeleport:
-	call GetPartyNickname
 	ld hl, .TeleportScript
 	call QueueScript
 	ld a, $81
 	ret
 
 .FailTeleport:
-	ld hl, .CantUseTeleportText
-	call MenuTextboxBackup
 	ld a, $80
 	ret
-
-.TeleportReturnText:
-	text_far _TeleportReturnText
-	text_end
-
-.CantUseTeleportText:
-	text_far _CantUseTeleportText
-	text_end
 
 .TeleportScript:
 	refreshmap
 	special UpdateTimePals
-	writetext .TeleportReturnText
-	pause 60
 	refreshmap
-	closetext
 	playsound SFX_WARP_TO
 	applymovement PLAYER, .TeleportFrom
 	farscall Script_AbortBugContest
@@ -923,16 +867,6 @@ StrengthFunction:
 .TryStrength:
 	jr .UseStrength
 
-.AlreadyUsingStrength: ; unreferenced
-	ld hl, .AlreadyUsingStrengthText
-	call MenuTextboxBackup
-	ld a, $80
-	ret
-
-.AlreadyUsingStrengthText:
-	text_far _AlreadyUsingStrengthText
-	text_end
-
 .UseStrength:
 	ld hl, Script_StrengthFromMenu
 	call QueueScript
@@ -953,25 +887,16 @@ SetStrengthFlag:
 	ret
 
 Script_StrengthFromMenu:
+	closetext
 	refreshmap
 	special UpdateTimePals
 
 Script_UsedStrength:
 	callasm SetStrengthFlag
-	writetext .UseStrengthText
+	waitsfx
 	playsound SFX_POKEFLUTE
-	pause 220
-	writetext .MoveBoulderText
-	closetext
+	showemote EMOTE_SHOCK, PLAYER, 220
 	end
-
-.UseStrengthText:
-	text_far _UseStrengthText
-	text_end
-
-.MoveBoulderText:
-	text_far _MoveBoulderText
-	text_end
 
 AskStrengthScript:
 	callasm TryStrengthOW
@@ -986,9 +911,7 @@ AskStrengthScript:
 	jumptext BouldersMoveText
 
 .AskStrength:
-	opentext
 	sjump Script_UsedStrength
-	closetext
 	end
 
 AskStrengthText:
@@ -1061,13 +984,8 @@ WhirlpoolFunction:
 	ret
 
 .FailWhirlpool:
-	call FieldMoveFailed
 	ld a, $80
 	ret
-
-UseWhirlpoolText:
-	text_far _UseWhirlpoolText
-	text_end
 
 TryWhirlpoolMenu:
 	call GetFacingTileCoord
@@ -1100,14 +1018,16 @@ TryWhirlpoolMenu:
 	ret
 
 Script_WhirlpoolFromMenu:
+	closetext
 	refreshmap
 	special UpdateTimePals
 
 Script_UsedWhirlpool:
-	writetext UseWhirlpoolText
-	refreshmap
+	waitsfx
+	playsound SFX_POKEFLUTE
+	showemote EMOTE_SHOCK, PLAYER, 220
 	callasm DisappearWhirlpool
-	closetext
+	refreshmap
 	end
 
 DisappearWhirlpool:
@@ -1122,7 +1042,6 @@ DisappearWhirlpool:
 	call LoadOverworldTilemapAndAttrmapPals
 	ld a, [wCutWhirlpoolAnimationType]
 	ld e, a
-	farcall PlayWhirlpoolSound
 	call BufferScreen
 	call GetMovementPermissions
 	ret
@@ -1157,14 +1076,14 @@ Script_MightyWhirlpool:
 
 Script_AskWhirlpoolOW:
 	opentext
-	writetext AskWhirlpoolText
-	yesorno
-	iftrue Script_UsedWhirlpool
+	writetext UseWhirlpoolText
+	waitbutton
 	closetext
+	sjump Script_UsedWhirlpool
 	end
 
-AskWhirlpoolText:
-	text_far _AskWhirlpoolText
+UseWhirlpoolText:
+	text_far _UseWhirlpoolText
 	text_end
 
 HeadbuttFunction:
@@ -1184,47 +1103,28 @@ TryHeadbuttFromMenu:
 	ret
 
 .no_tree
-	call FieldMoveFailed
 	ld a, $80
 	ret
-
-UseHeadbuttText:
-	text_far _UseHeadbuttText
-	text_end
-
-HeadbuttNothingText:
-	text_far _HeadbuttNothingText
-	text_end
 
 HeadbuttFromMenuScript:
 	refreshmap
 	special UpdateTimePals
 
 HeadbuttScript:
-	writetext UseHeadbuttText
-
 	refreshmap
 	callasm ShakeHeadbuttTree
 
 	callasm TreeMonEncounter
 	iffalse .no_battle
-	closetext
 	randomwildmon
 	startbattle
 	reloadmapafterbattle
 	end
 
 .no_battle
-	writetext HeadbuttNothingText
-	waitbutton
-	closetext
 	end
 
 TryHeadbuttOW::
-	ld d, HEADBUTT
-	call CheckPartyMove
-	jr c, .no
-
 	ld a, BANK(AskHeadbuttScript)
 	ld hl, AskHeadbuttScript
 	call CallScript
@@ -1237,14 +1137,13 @@ TryHeadbuttOW::
 
 AskHeadbuttScript:
 	opentext
-	writetext AskHeadbuttText
-	yesorno
-	iftrue HeadbuttScript
+	writetext UseHeadbuttText
 	closetext
+	sjump HeadbuttScript
 	end
 
-AskHeadbuttText:
-	text_far _AskHeadbuttText
+UseHeadbuttText:
+	text_far _UseHeadbuttText
 	text_end
 
 RockSmashFunction:
@@ -1266,7 +1165,6 @@ TryRockSmashFromMenu:
 	ret
 
 .no_rock
-	call FieldMoveFailed
 	ld a, $80
 	ret
 
@@ -1293,12 +1191,11 @@ GetFacingObject:
 	ret
 
 RockSmashFromMenuScript:
+	closetext
 	refreshmap
 	special UpdateTimePals
 
 RockSmashScript:
-	writetext UseRockSmashText
-	closetext
 	special WaitSFX
 	playsound SFX_STRENGTH
 	earthquake 84
@@ -1318,27 +1215,17 @@ MovementData_RockSmash:
 	rock_smash 10
 	step_end
 
-UseRockSmashText:
-	text_far _UseRockSmashText
-	text_end
-
 AskRockSmashScript:
 	callasm HasRockSmash
 	ifequal 1, .no
 
-	opentext
 	sjump RockSmashScript
-	closetext
 	end
 .no
 	jumptext MaySmashText
 
 MaySmashText:
 	text_far _MaySmashText
-	text_end
-
-AskRockSmashText:
-	text_far _AskRockSmashText
 	text_end
 
 HasRockSmash:
@@ -1695,57 +1582,6 @@ GotOffBikeText:
 	text_far _GotOffBikeText
 	text_end
 
-TryCutOW::
-	ld a, HATCHET
-	ld [wCurItem], a
-	ld hl, wNumItems
-	call CheckItem
-	jr nc, .cant_cut
-
-	ld a, BANK(AskCutScript)
-	ld hl, AskCutScript
-	call CallScript
-	scf
-	ret
-
-.cant_cut
-	ld a, BANK(CantCutScript)
-	ld hl, CantCutScript
-	call CallScript
-	scf
-	ret
-
-AskCutScript:
-	opentext
-	writetext AskCutText
-	yesorno
-	iffalse .declined
-	callasm .CheckMap
-	iftrue Script_Cut
-.declined
-	closetext
-	end
-
-.CheckMap:
-	xor a
-	ld [wScriptVar], a
-	call CheckMapForSomethingToCut
-	ret c
-	ld a, TRUE
-	ld [wScriptVar], a
-	ret
-
-AskCutText:
-	text_far _AskCutText
-	text_end
-
-CantCutScript:
-	jumptext CanCutText
-
-CanCutText:
-	text_far _CanCutText
-	text_end
-
 RockClimbFunction:
 	call FieldMoveJumptableReset
 .loop
@@ -1778,7 +1614,6 @@ RockClimbFunction:
 	ret
 
 .FailRockClimb:
-	call FieldMoveFailed
 	ld a, $80
 	ret
 
@@ -1803,8 +1638,8 @@ TryRockClimbOW::
 	call CheckItem
 	jr nc, .cant_climb
 
-	ld a, BANK(AskRockClimbScript)
-	ld hl, AskRockClimbScript
+	ld a, BANK(UsedRockClimbScript)
+	ld hl, UsedRockClimbScript
 	call CallScript
 	scf
 	ret
@@ -1816,24 +1651,15 @@ TryRockClimbOW::
 	scf
 	ret
 
-AskRockClimbScript:
-	opentext
-	writetext AskRockClimbText
-	yesorno
-	iftrue UsedRockClimbScript
-	closetext
-	end
-
 CantRockClimbScript:
 	jumptext CantRockClimbText
 
 RockClimbFromMenuScript:
+	closetext
 	reloadmappart
 	special UpdateTimePals
 
 UsedRockClimbScript:
-	writetext UsedRockClimbText
-	closetext
 	waitsfx
 	playsound SFX_STRENGTH
 	readvar VAR_FACING
@@ -1864,11 +1690,11 @@ UsedRockClimbScript:
 	ret
 
 .RockClimbUpStep:
-	step UP
+	slow_step UP
 	step_end
 
 .RockClimbDownStep:
-	step DOWN
+	slow_step DOWN
 	step_end
 
 .RockClimbFixFacing:
@@ -1880,14 +1706,6 @@ UsedRockClimbScript:
 	remove_fixed_facing
 	turn_head DOWN
 	step_end
-
-AskRockClimbText:
-	text_far _AskRockClimbText
-	text_end
-
-UsedRockClimbText:
-	text_far _UsedRockClimbText
-	text_end
 
 CantRockClimbText:
 	text_far _CantRockClimbText

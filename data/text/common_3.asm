@@ -1376,9 +1376,8 @@ _ItemCantUseOnEggText::
 	prompt
 
 _ItemOakWarningText::
-	text "OAK: <PLAYER>!"
-	line "This isn't the"
-	cont "time to use that!"
+	text "You can't use that"
+	line "here."
 	prompt
 
 _ItemBelongsToSomeoneElseText::

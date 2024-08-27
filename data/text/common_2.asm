@@ -292,61 +292,13 @@ _NameCardLinkCommErrorText::
 	line "error."
 	prompt
 
-_BadgeRequiredText::
-	text "Sorry! A new BADGE"
-	line "is required."
-	prompt
-
-_CantUseItemText::
-	text "Can't use that"
-	line "here."
-	prompt
-
 _UseCutText::
 	text "You cut the tree!"
-	prompt
-
-_CutNothingText::
-	text "There's nothing to"
-	line "cut here."
-	prompt
-
-_BlindingFlashText::
-	text "Your flashlight"
-	line "lights the area!@"
-	text_promptbutton
-	text_end
-
-	text_end ; unreferenced
-
-_UsedSurfText::
-	text "You decided to"
-	line "swim!"
-	done
-
-_CantSurfText::
-	text "You can't swim"
-	line "here."
-	prompt
-
-_AlreadySurfingText::
-	text "You're already"
-	line "swimming."
-	prompt
-
-_UseWaterfallText::
-	text "You used the"
-	line "Grapple Hook!"
 	done
 
 _HugeWaterfallText::
 	text "Wow, it's a huge"
 	line "waterfall!"
-	done
-
-_AskWaterfallText::
-	text "Do you want to use"
-	line "the Grapple Hook?"
 	done
 
 _UseDigText::
@@ -364,33 +316,6 @@ _CantUseDigText::
 	text "Can't use that"
 	line "here."
 	done
-
-_TeleportReturnText::
-	text "Return to the last"
-	line "#mon Center."
-	done
-
-_CantUseTeleportText::
-	text "Can't use that"
-	line "here."
-
-	para ""
-	done
-
-_AlreadyUsingStrengthText::
-	text "You already played"
-	line "the Earth Flute."
-	prompt
-
-_UseStrengthText::
-	text "You played the"
-	line "Earth Flute!"
-	done
-
-_MoveBoulderText::
-	text "You can"
-	line "move boulders."
-	prompt
 
 _AskStrengthText::
 	text "You may be"
@@ -413,7 +338,7 @@ _BouldersMayMoveText::
 _UseWhirlpoolText::
 	text "You played the"
 	line "Sea Flute!"
-	prompt
+	done
 
 _MayPassWhirlpoolText::
 	text "It's a vicious"
@@ -423,46 +348,14 @@ _MayPassWhirlpoolText::
 	line "to make it stop..."
 	done
 
-_AskWhirlpoolText::
-	text "A whirlpool is in"
-	line "the way."
-
-	para "Want to use"
-	line "the Sea Flute?"
-	done
-
 _UseHeadbuttText::
-	text "You poked the"
+	text "You shook the"
 	line "tree!"
-	prompt
-
-_HeadbuttNothingText::
-	text "Nope. Nothing…"
-	done
-
-_AskHeadbuttText::
-	text "A #MON could be"
-	line "in this tree."
-
-	para "Want to HEADBUTT"
-	line "it?"
-	done
-
-_UseRockSmashText::
-	text "You smashed the"
-	line "rock!"
 	prompt
 
 _MaySmashText::
 	text "You need a pickaxe"
 	line "to break this."
-	done
-
-_AskRockSmashText::
-	text "This rock looks"
-	line "breakable."
-
-	para "Want to smash it?"
 	done
 
 _RodBiteText::
@@ -496,13 +389,6 @@ _GotOffBikeText::
 	line "the @"
 	text_ram wStringBuffer2
 	text "."
-	done
-
-_AskCutText::
-	text "This tree can be"
-	line "cut!"
-
-	para "Want to cut it?"
 	done
 
 _CanCutText::
@@ -557,11 +443,6 @@ _PoisonWhiteoutText::
 	line "out!"
 	prompt
 
-_UseSweetScentText::
-	text "You used the"
-	line "# Lure!"
-	done
-
 _SweetScentNothingText::
 	text "Looks like there's"
 	line "nothing here…"
@@ -611,9 +492,8 @@ _ThrewAwayText::
 	prompt
 
 _OakThisIsntTheTimeText::
-	text "OAK: <PLAYER>!"
-	line "This isn't the"
-	cont "time to use that!"
+	text "You can't use that"
+	line "here."
 	prompt
 
 _YouDontHaveAMonText::
@@ -1399,9 +1279,8 @@ _ItemsTooImportantText::
 	prompt
 
 _ItemsOakWarningText::
-	text "OAK: <PLAYER>!"
-	line "This isn't the"
-	cont "time to use that!"
+	text "You can't use that"
+	line "here."
 	done
 
 _PokemonSwapItemText::
@@ -1516,19 +1395,6 @@ _MayRegisterItemText::
 	para "registered for use"
 	line "on SELECT Button."
 	done
-
-_AskRockClimbText::
-	text "The wall is very"
-	line "rocky…"
-
-	para "Do you want to"
-	line "climb it?"
-	done
-
-_UsedRockClimbText::
-	text "You climbed the"
-	line "wall!"
-	prompt
 
 _CantRockClimbText::
 	text "You could climb"

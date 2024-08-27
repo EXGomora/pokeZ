@@ -2316,50 +2316,34 @@ CoinCaseEffect:
 	text_end
 
 SwimsuitEffect:
-	ld a, 1
-	ld [wUsingHMItem], a
 	farcall SurfFunction
 	ret
 
 PickaxeEffect:
-	ld a, 1
-	ld [wUsingHMItem], a
 	farcall RockSmashFunction
 	ret
 
 ClimbingGearEffect:
-	ld a, 1
-	ld [wUsingHMItem], a
 	farcall RockClimbFunction
 	ret
 
 HatchetEffect:
-	ld a, 1
-	ld [wUsingHMItem], a
 	farcall CutFunction
 	ret
 
 SeaFluteEffect:
-	ld a, 1
-	ld [wUsingHMItem], a
 	farcall WhirlpoolFunction
 	ret
 
 GrappleHookEffect:
-	ld a, 1
-	ld [wUsingHMItem], a
 	farcall WaterfallFunction
 	ret
 
 EarthFluteEffect:
-	ld a, 1
-	ld [wUsingHMItem], a
 	farcall StrengthFunction
 	ret
 
 SkyFluteEffect:
-	ld a, 1
-	ld [wUsingHMItem], a
 	farcall FlyFunction
 	ret
 
@@ -2372,14 +2356,10 @@ PokeLureEffect:
 	ret
 
 FlashlightEffect:
-	ld a, 1
-	ld [wUsingHMItem], a
 	farcall FlashFunction
 	ret
 
 LongStickEffect:
-	ld a, 1
-	ld [wUsingHMItem], a
 	farcall HeadbuttFunction
 	ret
 

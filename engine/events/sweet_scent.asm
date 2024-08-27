@@ -8,12 +8,13 @@ SweetScentFromMenu:
 .SweetScent:
 	refreshmap
 	special UpdateTimePals
-	writetext UseSweetScentText
-	waitbutton
 	callasm SweetScentEncounter
 	iffalse SweetScentNothing
 	checkflag ENGINE_BUG_CONTEST_TIMER
 	iftrue .BugCatchingContest
+	waitsfx
+	playsound SFX_SWEET_SCENT
+	pause 20
 	randomwildmon
 	startbattle
 	reloadmapafterbattle
@@ -23,6 +24,7 @@ SweetScentFromMenu:
 	farsjump BugCatchingContestBattleScript
 
 SweetScentNothing:
+	opentext
 	writetext SweetScentNothingText
 	waitbutton
 	closetext
@@ -56,10 +58,6 @@ SweetScentEncounter:
 	ld [wBattleType], a
 	ret
 
-UseSweetScentText:
-	text_far _UseSweetScentText
-	text_end
-
 SweetScentNothingText:
-	text_far _SweetScentNothingText
+	text_far _ItemsOakWarningText
 	text_end
