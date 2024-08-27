@@ -92,7 +92,13 @@ HideHeadbuttTree:
 	ld h, [hl]
 	ld l, a
 
+	ld a, [wMapTileset]
+	cp TILESET_NEOST_OUTDOORS_1
+	ld a, $04 ; grass block
+	jr z, .replacement_tile_determined
+
 	ld a, $05 ; grass block
+.replacement_tile_determined
 	ld [hli], a
 	ld [hld], a
 	ld bc, SCREEN_WIDTH
