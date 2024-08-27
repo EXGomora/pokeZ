@@ -293,3 +293,25 @@ Sfx_Puddle_Ch5:
 	sound __, 16, $98, $0700
 	soundinput $8
 	endchannel
+
+Sfx_SkyFlute:
+	channel_count 1
+	channel 7, Sfx_SkyFlute_Ch7
+
+Sfx_SkyFlute_Ch7:
+	tempo 256
+	toggle_sfx
+	vibrato 16, 1, 4
+	note_type 12, 1, 0
+	octave 5
+	volume_envelope 14, 1
+	note D_, 2
+	note E_, 2
+	octave 6
+	note D_, 4
+	note C#, 1
+;Bar 2
+	note C_, 1
+	octave 5
+	note B_, 5
+	sound_ret

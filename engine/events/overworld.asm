@@ -550,8 +550,8 @@ FlyFunction:
 	special UpdateTimePals
 	callasm HideSprites
 	waitsfx
-	playsound SFX_POKEFLUTE
-	showemote EMOTE_SHOCK, PLAYER, 220
+	playsound SFX_SKY_FLUTE
+	showemote EMOTE_NOTE, PLAYER, 94
 	refreshmap
 	callasm FlyFromAnim
 	farscall Script_AbortBugContest
@@ -894,8 +894,8 @@ Script_StrengthFromMenu:
 Script_UsedStrength:
 	callasm SetStrengthFlag
 	waitsfx
-	playsound SFX_POKEFLUTE
-	showemote EMOTE_SHOCK, PLAYER, 220
+	playsound SFX_SKY_FLUTE
+	showemote EMOTE_NOTE, PLAYER, 94
 	end
 
 AskStrengthScript:
@@ -1024,8 +1024,8 @@ Script_WhirlpoolFromMenu:
 
 Script_UsedWhirlpool:
 	waitsfx
-	playsound SFX_POKEFLUTE
-	showemote EMOTE_SHOCK, PLAYER, 220
+	playsound SFX_SKY_FLUTE
+	showemote EMOTE_NOTE, PLAYER, 94
 	callasm DisappearWhirlpool
 	refreshmap
 	end

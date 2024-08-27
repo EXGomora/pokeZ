@@ -197,6 +197,8 @@ DEF NUM_FLOORS EQU const_value
 	const EMOTE_BOLT
 	const EMOTE_SLEEP
 	const EMOTE_FISH
+	const EMOTE_NOTE
+	const EMOTE_PAUSE
 	const EMOTE_SHADOW
 	const EMOTE_ROD
 	const EMOTE_BOULDER_DUST
