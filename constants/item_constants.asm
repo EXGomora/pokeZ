@@ -105,7 +105,7 @@
 	const WHT_APRICORN ; 61
 	const BLACKBELT_I  ; 62
 	const BLK_APRICORN ; 63
-	const CLIMBINGGEAR ; 64
+	const SKYHOOK      ; 64
 	const PNK_APRICORN ; 65
 	const BLACKGLASSES ; 66
 	const SLOWPOKETAIL ; 67
@@ -153,7 +153,7 @@
 	const POKE_LURE    ; 91
 	const LEFTOVERS    ; 92
 	const FLASHLIGHT   ; 93
-	const LONG_STICK   ; 94
+	const ITEM_94      ; 94
 	const ITEM_95      ; 95
 	const MYSTERYBERRY ; 96
 	const DRAGON_SCALE ; 97

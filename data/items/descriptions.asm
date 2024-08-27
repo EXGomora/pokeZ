@@ -100,7 +100,7 @@ ItemDescriptions:
 	dw WhtApricornDesc
 	dw BlackbeltDesc
 	dw BlkApricornDesc
-	dw ClimbingGearDesc
+	dw SkyhookDesc
 	dw PnkApricornDesc
 	dw BlackGlassesDesc
 	dw SlowpokeTailDesc
@@ -148,7 +148,7 @@ ItemDescriptions:
 	dw PokeLureDesc
 	dw LeftoversDesc
 	dw FlashlightDesc
-	dw LongStickDesc
+	dw TeruSama16Desc
 	dw TeruSama17Desc
 	dw MysteryBerryDesc
 	dw DragonScaleDesc
@@ -648,7 +648,7 @@ BlkApricornDesc:
 	db   "A black APRICORN."
 	next "@"
 
-ClimbingGearDesc:
+SkyhookDesc:
 	db   "Lets you climb"
 	next "cliffs.@"
 
@@ -839,10 +839,8 @@ FlashlightDesc:
 	db   "Lights up dark"
 	next "areas.@"
 
-LongStickDesc:
-	db   "Pokes trees with"
-	next "wild #mon.@"
-
+TeruSama16Desc:
+	db   "?@"
 
 TeruSama17Desc:
 	db   "?@"

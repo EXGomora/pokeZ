@@ -405,7 +405,7 @@ MartSaltbreezeHM:
 	db 8 ; # items
 	db HATCHET
 	db PICKAXE
-	db CLIMBINGGEAR
+	db SKYHOOK
 	db SEA_FLUTE
 	db GRAPPLE_HOOK
 	db EARTH_FLUTE

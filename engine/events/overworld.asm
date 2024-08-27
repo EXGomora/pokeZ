@@ -1086,30 +1086,6 @@ UseWhirlpoolText:
 	text_far _UseWhirlpoolText
 	text_end
 
-HeadbuttFunction:
-	call TryHeadbuttFromMenu
-	and $7f
-	ld [wFieldMoveSucceeded], a
-	ret
-
-TryHeadbuttFromMenu:
-	call GetFacingTileCoord
-	call CheckHeadbuttTreeTile
-	jr nz, .no_tree
-
-	ld hl, HeadbuttFromMenuScript
-	call QueueScript
-	ld a, $81
-	ret
-
-.no_tree
-	ld a, $80
-	ret
-
-HeadbuttFromMenuScript:
-	refreshmap
-	special UpdateTimePals
-
 HeadbuttScript:
 	refreshmap
 	callasm ShakeHeadbuttTree
@@ -1632,7 +1608,7 @@ TryRockClimbMenu:
 	ret
 
 TryRockClimbOW::
-	ld a, CLIMBINGGEAR
+	ld a, SKYHOOK
 	ld [wCurItem], a
 	ld hl, wNumItems
 	call CheckItem

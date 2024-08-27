@@ -113,7 +113,7 @@ ItemEffects:
 	dw NoEffect            ; WHT_APRICORN
 	dw NoEffect            ; BLACKBELT_I
 	dw NoEffect            ; BLK_APRICORN
-	dw ClimbingGearEffect  ; CLIMBINGGEAR
+	dw SkyhookEffect       ; SKYHOOK
 	dw NoEffect            ; PNK_APRICORN
 	dw NoEffect            ; BLACKGLASSES
 	dw NoEffect            ; SLOWPOKETAIL
@@ -161,7 +161,7 @@ ItemEffects:
 	dw PokeLureEffect      ; POKE_LURE
 	dw NoEffect            ; LEFTOVERS
 	dw FlashlightEffect    ; FLASHLIGHT
-	dw LongStickEffect     ; LONG_STICK
+	dw NoEffect            ; ITEM_94
 	dw NoEffect            ; ITEM_95
 	dw RestorePPEffect     ; MYSTERYBERRY
 	dw NoEffect            ; DRAGON_SCALE
@@ -2323,7 +2323,7 @@ PickaxeEffect:
 	farcall RockSmashFunction
 	ret
 
-ClimbingGearEffect:
+SkyhookEffect:
 	farcall RockClimbFunction
 	ret
 
@@ -2357,10 +2357,6 @@ PokeLureEffect:
 
 FlashlightEffect:
 	farcall FlashFunction
-	ret
-
-LongStickEffect:
-	farcall HeadbuttFunction
 	ret
 
 ZygardeCubeEffect:
