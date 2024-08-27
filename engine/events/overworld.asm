@@ -164,6 +164,7 @@ Script_CutFromMenu:
 	special UpdateTimePals
 
 Script_Cut:
+	reanchormap
 	reloadmappart
 	callasm CutDownTreeOrGrass
 	closetext
@@ -248,10 +249,6 @@ TryCutOW::
 	ret
 
 AskCutScript:
-	opentext
-	writetext UseCutText
-	waitbutton
-	closetext
 	callasm .CheckMap
 	iftrue Script_Cut
 
@@ -263,10 +260,6 @@ AskCutScript:
 	ld a, TRUE
 	ld [wScriptVar], a
 	ret
-
-UseCutText:
-	text_far _UseCutText
-	text_end
 
 CantCutScript:
 	jumptext CanCutText
@@ -1018,15 +1011,16 @@ TryWhirlpoolMenu:
 	ret
 
 Script_WhirlpoolFromMenu:
-	closetext
 	refreshmap
 	special UpdateTimePals
 
 Script_UsedWhirlpool:
+	reanchormap
 	waitsfx
 	playsound SFX_SKY_FLUTE
 	showemote EMOTE_NOTE, PLAYER, 94
 	callasm DisappearWhirlpool
+	closetext
 	refreshmap
 	end
 
@@ -1054,8 +1048,8 @@ TryWhirlpoolOW::
 	jr nc, .failed
 	call TryWhirlpoolMenu
 	jr c, .failed
-	ld a, BANK(Script_AskWhirlpoolOW)
-	ld hl, Script_AskWhirlpoolOW
+	ld a, BANK(Script_UsedWhirlpool)
+	ld hl, Script_UsedWhirlpool
 	call CallScript
 	scf
 	ret
@@ -1074,20 +1068,8 @@ Script_MightyWhirlpool:
 	text_far _MayPassWhirlpoolText
 	text_end
 
-Script_AskWhirlpoolOW:
-	opentext
-	writetext UseWhirlpoolText
-	waitbutton
-	closetext
-	sjump Script_UsedWhirlpool
-	end
-
-UseWhirlpoolText:
-	text_far _UseWhirlpoolText
-	text_end
-
 HeadbuttScript:
-	refreshmap
+	reanchormap
 	callasm ShakeHeadbuttTree
 
 	callasm TreeMonEncounter
@@ -1098,11 +1080,12 @@ HeadbuttScript:
 	end
 
 .no_battle
+	closetext
 	end
 
 TryHeadbuttOW::
-	ld a, BANK(AskHeadbuttScript)
-	ld hl, AskHeadbuttScript
+	ld a, BANK(HeadbuttScript)
+	ld hl, HeadbuttScript
 	call CallScript
 	scf
 	ret

@@ -292,10 +292,6 @@ _NameCardLinkCommErrorText::
 	line "error."
 	prompt
 
-_UseCutText::
-	text "You cut the tree!"
-	done
-
 _HugeWaterfallText::
 	text "Wow, it's a huge"
 	line "waterfall!"
@@ -333,11 +329,6 @@ _BouldersMoveText::
 _BouldersMayMoveText::
 	text "You may be"
 	line "able to move this."
-	done
-
-_UseWhirlpoolText::
-	text "You played the"
-	line "Sea Flute!"
 	done
 
 _MayPassWhirlpoolText::
