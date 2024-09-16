@@ -1863,7 +1863,7 @@ wMinutesSince:: db
 wHoursSince:: db
 wDaysSince:: db
 
-wUsingHMItem:: db
+wFlyingWithHMItem:: db
 
 
 SECTION "WRAM 1", WRAMX
