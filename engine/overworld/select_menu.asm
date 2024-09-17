@@ -112,6 +112,8 @@ UseRegisteredItem:
 	ld a, [wItemAttributeValue]
 	ld hl, .SwitchTo
 	rst JumpTable
+	xor a
+	ld [wSkipOak], a
 	ret
 
 .SwitchTo:
@@ -166,7 +168,11 @@ UseRegisteredItem:
 	call ReanchorMap
 
 ._cantuse
+	ld a, [wSkipOak]
+	and a
+	jr nz, .no_oak
 	call CantUseItem
+.no_oak
 	call CloseText
 	and a
 	ret

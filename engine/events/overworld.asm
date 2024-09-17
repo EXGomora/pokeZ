@@ -522,6 +522,8 @@ FlyFunction:
 
 .illegal
 	call CloseWindow
+	ld a, 1
+	ld [wSkipOak], a
 	ld a, [wFlyingWithHMItem]
 	and a
 	jr z, .done_tiles

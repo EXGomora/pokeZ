@@ -427,6 +427,8 @@ UseItem:
 	ld a, [wItemAttributeValue]
 	ld hl, .dw
 	rst JumpTable
+	xor a
+	ld [wSkipOak], a
 	ret
 
 .dw
@@ -440,6 +442,9 @@ UseItem:
 	dw .Field   ; ITEMMENU_CLOSE
 
 .Oak:
+	ld a, [wSkipOak]
+	and a
+	ret nz
 	ld hl, OakThisIsntTheTimeText
 	call Pack_PrintTextNoScroll
 	ret
